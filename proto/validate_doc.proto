@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+service validator{
+    rpc OrderDocument (DocumentResquest) returns (DocumentResponse);
+}
+
+message DocumentResquest{
+    int32 type = 1;
+    string doc = 2;
+}
+
+message DocumentResponse{
+    string message = 1;
+}
+
+enum Type{
+    CPF = 0;
+    CNPJ = 1;
+}
+
+
+
