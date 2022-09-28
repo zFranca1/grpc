@@ -10,13 +10,22 @@ message DocumentResquest{
 }
 
 message DocumentResponse{
-    string message = 1;
+    TYPE type = 1;
+    string message = 2;
+    bool validation = 3;
+
 }
 
-enum Type{
+enum TYPE{
     CPF = 0;
     CNPJ = 1;
 }
+
+enum STATUS{
+    VALID = 0;
+    INVALID = 1;
+}
+
 
 
 
