@@ -1,7 +1,9 @@
+
 from urllib.request import Request
 import grpc
 import concurrent
 from concurrent import futures
+from itertools import cycle
 
 
 import validate_doc_pb2
@@ -9,49 +11,65 @@ import validate_doc_pb2_grpc
 import re
 
 
+LENGTH_CNPJ = 14
+
+
 class validatorServicer(validate_doc_pb2_grpc.validatorServicer):
-    def OrderDocument(self, request, context):
-        print("we got something!!")
+    def OrderDocument(self, request: validate_doc_pb2.DocumentResquest,
+                      context: grpc.aio.ServicerContext) -> validate_doc_pb2.DocumentResponse:
+        print(request)
+        if cpf_validate(request.doc) == True and request.type == 1:
+            return validate_doc_pb2.DocumentResponse(message='Valido', type=1, validation=True)
+        elif cpf_validate(request.doc) == False and request.type == 1:
+            return validate_doc_pb2.DocumentResponse(message='Invalido', type=1, validation=False)
+        elif is_cnpj_valido(request.doc) == True and request.type == 2:
+            return validate_doc_pb2.DocumentResponse(message='Valido', type=2, validation=True)
+        elif is_cnpj_valido(request.doc) == False and request.type == 2:
+            return validate_doc_pb2.DocumentResponse(message='Invalido', type=2, validation=False)
 
 
 def main():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    validate_doc_pb2_grpc.add_validatorServicer_to_server(validatorServicer(), server)
+    validate_doc_pb2_grpc.add_validatorServicer_to_server(
+        validatorServicer(), server)
     print('listening on port 50051')
     server.add_insecure_port('[::]:50051')
     server.start()
     server.wait_for_termination()
 
 
-def validation(request):
-    if request.type == validate_doc_pb2.TYPE.CPF:
-        cpf = request.document
+def cpf_validate(numbers):
+    cpf = [int(char) for char in numbers if char.isdigit()]
 
-        soma = 0
-        count = 10
-        for i in range(0, len(cpf)-2):
-            soma = soma + (int(cpf[i])*count)
-            i+=1
-            count-=1
-        dg1 = 11-(soma%11)
-        if dg1 >= 10:
-            dg1 = 0
+    if len(cpf) != 11:
+        return False
 
-        soma = 0
-        count = 10
-        for j in range(1, len(cpf)-1):
-            soma = soma + (int(cpf[j])*count)
-            j+=1
-            count-=1
-        dg2 = 11-(soma%11)
-        if dg2 >= 10:
-            dg2 = 0
+    if cpf == cpf[::-1]:
+        return False
 
-        if int(cpf[9]) != dg1 or int(cpf[10]) != dg2:
-            return 1, validate_doc_pb2.STATUS.VALID
-        else:
-            return 0, validate_doc_pb2.STATUS.VALID
+    for i in range(9, 11):
+        value = sum((cpf[num] * ((i+1) - num) for num in range(0, i)))
+        digit = ((value * 10) % 11) % 10
+        if digit != cpf[i]:
+            return False
+    return True
 
 
-main()            
+def is_cnpj_valido(cnpj: str) -> bool:
+    if len(cnpj) != LENGTH_CNPJ:
+        return False
 
+    if cnpj in (c * LENGTH_CNPJ for c in "1234567890"):
+        return False
+
+    cnpj_r = cnpj[::-1]
+    for i in range(2, 0, -1):
+        cnpj_enum = zip(cycle(range(2, 10)), cnpj_r[i:])
+        dv = sum(map(lambda x: int(x[1]) * x[0], cnpj_enum)) * 10 % 11
+        if cnpj_r[i - 1:i] != str(dv % 10):
+            return False
+
+    return True
+
+
+main()

@@ -17,14 +17,11 @@ message DocumentResponse{
 }
 
 enum TYPE{
-    CPF = 0;
-    CNPJ = 1;
+    A = 0;
+    CPF = 1;
+    CNPJ = 2;
 }
 
-enum STATUS{
-    VALID = 0;
-    INVALID = 1;
-}
 
 
 

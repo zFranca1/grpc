@@ -13,19 +13,21 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12validate_doc.proto\"-\n\x10\x44ocumentResquest\x12\x0c\n\x04type\x18\x01 \x01(\x05\x12\x0b\n\x03\x64oc\x18\x02 \x01(\t\"#\n\x10\x44ocumentResponse\x12\x0f\n\x07message\x18\x01 \x01(\t*\x19\n\x04TYPE\x12\x07\n\x03\x43PF\x10\x00\x12\x08\n\x04\x43NPJ\x10\x01\x32\x42\n\tvalidator\x12\x35\n\rOrderDocument\x12\x11.DocumentResquest\x1a\x11.DocumentResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12validate_doc.proto\"-\n\x10\x44ocumentResquest\x12\x0c\n\x04type\x18\x01 \x01(\x05\x12\x0b\n\x03\x64oc\x18\x02 \x01(\t\"L\n\x10\x44ocumentResponse\x12\x13\n\x04type\x18\x01 \x01(\x0e\x32\x05.TYPE\x12\x0f\n\x07message\x18\x02 \x01(\t\x12\x12\n\nvalidation\x18\x03 \x01(\x08* \n\x04TYPE\x12\x05\n\x01\x41\x10\x00\x12\x07\n\x03\x43PF\x10\x01\x12\x08\n\x04\x43NPJ\x10\x02* \n\x06STATUS\x12\t\n\x05VALID\x10\x00\x12\x0b\n\x07INVALID\x10\x01\x32\x42\n\tvalidator\x12\x35\n\rOrderDocument\x12\x11.DocumentResquest\x1a\x11.DocumentResponseb\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'validate_doc_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _TYPE._serialized_start=106
-  _TYPE._serialized_end=131
+  _TYPE._serialized_start=147
+  _TYPE._serialized_end=179
+  _STATUS._serialized_start=181
+  _STATUS._serialized_end=213
   _DOCUMENTRESQUEST._serialized_start=22
   _DOCUMENTRESQUEST._serialized_end=67
   _DOCUMENTRESPONSE._serialized_start=69
-  _DOCUMENTRESPONSE._serialized_end=104
-  _VALIDATOR._serialized_start=133
-  _VALIDATOR._serialized_end=199
+  _DOCUMENTRESPONSE._serialized_end=145
+  _VALIDATOR._serialized_start=215
+  _VALIDATOR._serialized_end=281
 # @@protoc_insertion_point(module_scope)
